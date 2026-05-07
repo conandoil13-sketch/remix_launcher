@@ -39,10 +39,15 @@ async function preloadUiImages() {
   setSlingshotImage(image);
 }
 
+function syncViewportHeight() {
+  const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+  document.documentElement.style.setProperty("--app-height", `${Math.round(viewportHeight)}px`);
+}
+
 function resizeCanvasDisplay() {
   const wrap = canvas.parentElement;
   const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
+  const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
   const horizontalPadding = viewportWidth <= 560 ? 16 : 40;
   const verticalPadding = viewportWidth <= 560 ? 16 : 32;
   const maxWidth = viewportWidth - horizontalPadding;
@@ -86,6 +91,7 @@ function syncStageGeometry() {
 
 let stageWalls = stageWallsToPixels(state.stage);
 syncStageGeometry();
+syncViewportHeight();
 resizeCanvasDisplay();
 
 attachInput(canvas, state, () => {
@@ -94,6 +100,9 @@ attachInput(canvas, state, () => {
 });
 
 window.addEventListener("resize", resizeCanvasDisplay);
+window.addEventListener("resize", syncViewportHeight);
+window.visualViewport?.addEventListener("resize", syncViewportHeight);
+window.visualViewport?.addEventListener("scroll", syncViewportHeight);
 
 ui.retryButton.addEventListener("click", () => {
   restartStage(state);
@@ -140,12 +149,15 @@ ui.teamSummaryChips.addEventListener("pointerdown", (event) => {
   renderTeamDraft(state, ui);
 });
 
-ui.teamResetButton.addEventListener("click", () => {
+ui.teamResetButton.addEventListener("pointerdown", (event) => {
+  event.preventDefault();
   resetLineupDraft(state);
+  updateUI(state, ui);
   renderTeamDraft(state, ui);
 });
 
-ui.teamConfirmButton.addEventListener("click", () => {
+ui.teamConfirmButton.addEventListener("pointerdown", (event) => {
+  event.preventDefault();
   if (confirmLineupDraft(state)) {
     updateUI(state, ui);
     renderTeamDraft(state, ui);

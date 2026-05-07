@@ -40,9 +40,11 @@ export function updateUI(state, refs) {
 }
 
 export function renderTeamDraft(state, refs) {
-  refs.teamModal.classList.toggle("is-hidden", state.phase !== "draft");
+  const isDraftPhase = state.phase === "draft";
+  refs.teamModal.classList.toggle("is-hidden", !isDraftPhase);
+  document.body.classList.toggle("modal-open", isDraftPhase);
 
-  if (state.phase !== "draft") {
+  if (!isDraftPhase) {
     return;
   }
 
