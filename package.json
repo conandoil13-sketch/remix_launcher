@@ -1,0 +1,9 @@
+{
+  "name": "remix-launcher",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GitHub Pages friendly HTML/CSS/JS slingshot game MVP",
+  "scripts": {
+    "start": "python3 -m http.server 4173"
+  }
+}

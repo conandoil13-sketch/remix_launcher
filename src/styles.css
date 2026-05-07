@@ -1,0 +1,519 @@
+:root {
+  color-scheme: light;
+  --bg: #0e1a2b;
+  --panel: rgba(9, 16, 27, 0.82);
+  --panel-border: rgba(255, 255, 255, 0.09);
+  --text: #f3f5f7;
+  --muted: #b7c2ce;
+  --accent: #ff875c;
+  --accent-2: #ffe082;
+  --success: #74f0b3;
+  --danger: #ff6c7d;
+  --shadow: 0 24px 60px rgba(3, 8, 15, 0.34);
+  --font-display: "Trebuchet MS", "Noto Sans KR", sans-serif;
+  --font-body: "Arial", "Apple SD Gothic Neo", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--text);
+  background:
+    radial-gradient(circle at 50% 8%, rgba(255, 180, 110, 0.2), transparent 24%),
+    radial-gradient(circle at 85% 18%, rgba(115, 163, 255, 0.1), transparent 20%),
+    linear-gradient(180deg, #121827 0%, #0b111b 45%, #05070c 100%);
+}
+
+button {
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+}
+
+.game-card {
+  position: relative;
+}
+
+.topbar,
+.hud,
+.status-panel,
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-panel {
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(11, 18, 30, 0.78), rgba(8, 13, 24, 0.72));
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(14px);
+}
+
+.top-panel {
+  display: grid;
+  gap: 8px;
+}
+
+.overlay-panel {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  z-index: 2;
+}
+
+.topbar,
+.status-panel {
+  justify-content: space-between;
+}
+
+.topbar {
+  align-items: center;
+}
+
+.title-row {
+  min-width: 0;
+}
+
+.eyebrow {
+  margin: 0 0 2px;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 4.8vw, 1.7rem);
+  line-height: 1.05;
+}
+
+.hud {
+  margin: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  gap: 10px;
+}
+
+.hud-item {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: auto;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(120, 170, 255, 0.12);
+  border: 0;
+}
+
+.hud-label {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.hud-item strong {
+  display: block;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.canvas-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, #1a2742 0%, #0f1b2a 52%, #09111a 100%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: var(--shadow);
+}
+
+#gameCanvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  touch-action: none;
+  image-rendering: auto;
+}
+
+.status-panel {
+  bottom: 12px;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-panel {
+  top: 12px;
+}
+
+.message {
+  flex: 1 1 auto;
+  margin: 0;
+  color: var(--text);
+  text-align: left;
+  font-size: 0.84rem;
+  line-height: 1.25;
+}
+
+.ball-inline {
+  flex: 0 1 auto;
+  color: var(--accent-2);
+  font-weight: 700;
+}
+
+.status-copy {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+  flex: 1 1 auto;
+}
+
+.action-row {
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  width: auto;
+  align-self: center;
+}
+
+.primary-button,
+.ghost-button {
+  padding: 9px 12px;
+  border-radius: 999px;
+  transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
+  white-space: nowrap;
+  font-size: 0.86rem;
+  position: relative;
+  z-index: 3;
+}
+
+.primary-button:hover,
+.ghost-button:hover {
+  transform: translateY(-1px);
+}
+
+.primary-button {
+  color: #10161f;
+  background: #e7edf5;
+}
+
+.primary-button.accent {
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+}
+
+.ghost-button {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.team-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(5, 8, 14, 0.6);
+  backdrop-filter: blur(10px);
+}
+
+.team-modal-card {
+  width: min(100%, 430px);
+  padding: 18px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 185, 92, 0.16), transparent 28%),
+    linear-gradient(180deg, rgba(18, 28, 44, 0.98), rgba(8, 13, 24, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow);
+}
+
+.team-modal-card h2 {
+  margin: 0 0 8px;
+  font-size: 1.35rem;
+}
+
+.team-modal-eyebrow,
+.team-modal-meta,
+.team-summary-label,
+.team-pick-role,
+.team-pick-plus {
+  margin: 0;
+  color: var(--muted);
+}
+
+.team-modal-eyebrow {
+  margin-bottom: 6px;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+}
+
+.team-modal-meta {
+  margin-bottom: 14px;
+  font-size: 0.92rem;
+}
+
+.team-select-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.team-pick-card {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 10px 8px 12px;
+  border-radius: 20px;
+  text-align: center;
+  color: var(--text);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.team-pick-name,
+.team-pick-role,
+.team-pick-count,
+.team-pick-plus {
+  display: block;
+}
+
+.team-pick-face {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 226, 130, 0.8);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.team-pick-name {
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.team-pick-role,
+.team-pick-plus {
+  font-size: 0.72rem;
+}
+
+.team-pick-count {
+  margin-top: 2px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  color: #10161f;
+  background: linear-gradient(135deg, var(--accent-2), #ffc768);
+  font-weight: 700;
+}
+
+.team-pick-plus {
+  font-weight: 700;
+  color: #ffeac3;
+}
+
+.team-summary {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.team-summary-chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.team-summary-empty {
+  grid-column: 1 / -1;
+  padding: 14px 12px;
+  border-radius: 16px;
+  text-align: center;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.team-lineup-card {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  padding: 10px 8px 12px;
+  border-radius: 18px;
+  color: var(--text);
+  background: linear-gradient(180deg, rgba(119, 169, 255, 0.2), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(160, 199, 255, 0.24);
+}
+
+.team-lineup-face {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.82);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.team-lineup-order {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #10161f;
+  background: linear-gradient(135deg, var(--accent-2), #ffb566);
+}
+
+.team-lineup-name {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-align: center;
+  word-break: keep-all;
+}
+
+.team-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.team-modal-actions .primary-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
+}
+
+.is-hidden {
+  display: none;
+}
+
+@media (min-width: 860px) and (orientation: landscape) {
+  .overlay-panel {
+    left: 14px;
+    right: 14px;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-shell {
+    padding: 0;
+  }
+
+  .status-panel {
+    gap: 8px;
+  }
+
+  .topbar {
+    gap: 6px;
+  }
+
+  .hud {
+    gap: 10px;
+  }
+
+  .action-row {
+    gap: 6px;
+  }
+
+  .primary-button,
+  .ghost-button {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+
+  .overlay-panel {
+    left: 10px;
+    right: 10px;
+  }
+
+  .team-select-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .team-modal {
+    padding: 12px;
+  }
+
+  .team-modal-card {
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  .team-summary {
+    padding: 12px;
+  }
+
+  .team-lineup-face,
+  .team-pick-face {
+    width: 50px;
+    height: 50px;
+  }
+
+  .team-lineup-name,
+  .team-pick-name {
+    font-size: 0.72rem;
+  }
+
+  .team-pick-role,
+  .team-pick-count,
+  .team-pick-plus {
+    font-size: 0.66rem;
+  }
+
+  .team-modal-actions {
+    flex-wrap: wrap;
+  }
+
+  .team-modal-actions .ghost-button,
+  .team-modal-actions .primary-button {
+    flex: 1 1 0;
+  }
+
+}

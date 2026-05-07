@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>리믹스 발사대</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="game-card">
+        <div class="canvas-wrap">
+          <canvas id="gameCanvas" width="420" height="760" aria-label="리믹스 발사대 게임"></canvas>
+
+          <section class="info-panel top-panel overlay-panel" aria-label="게임 상태">
+            <header class="topbar">
+              <div class="title-row">
+                <p class="eyebrow">Canvas Slingshot MVP</p>
+                <h1>리믹스 발사대</h1>
+              </div>
+              <button id="restartButton" class="ghost-button" type="button">재시작</button>
+            </header>
+
+            <section class="hud">
+              <div class="hud-item">
+                <span class="hud-label">현재 레벨</span>
+                <strong id="stageLabel">1 / 10</strong>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">재도전</span>
+                <strong id="retryLabel">0회</strong>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">남은 공</span>
+                <strong id="shotsLabel">5</strong>
+              </div>
+            </section>
+          </section>
+
+          <section class="info-panel status-panel overlay-panel">
+            <div class="status-copy">
+              <p id="ballLabel" class="message ball-inline">토이고 장전 완료</p>
+              <p id="messageLabel" class="message">5개의 공으로 모든 슬롯을 맞혀보세요.</p>
+            </div>
+            <div class="action-row">
+              <button id="retryButton" class="primary-button" type="button">같은 스테이지 다시</button>
+              <button id="nextButton" class="primary-button accent is-hidden" type="button">다음 스테이지</button>
+            </div>
+          </section>
+
+        </div>
+      </section>
+
+      <section id="teamModal" class="team-modal is-hidden" aria-label="피처링 선택">
+        <div class="team-modal-card">
+          <p class="team-modal-eyebrow">Stage 4+</p>
+          <h2>피처링으로 함께할 래퍼를 선택하세요</h2>
+          <p id="teamModalMeta" class="team-modal-meta">구멍 수 + 2개의 공을 고릅니다.</p>
+
+          <div id="teamSelectGrid" class="team-select-grid"></div>
+
+          <div class="team-summary">
+            <p id="teamSummaryLabel" class="team-summary-label">선택된 공 0 / 0</p>
+            <div id="teamSummaryChips" class="team-summary-chips"></div>
+          </div>
+
+          <div class="team-modal-actions">
+            <button id="teamResetButton" class="ghost-button" type="button">초기화</button>
+            <button id="teamConfirmButton" class="primary-button accent" type="button">도전 시작</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
