@@ -125,43 +125,43 @@ ui.nextButton.addEventListener("click", () => {
   renderTeamDraft(state, ui);
 });
 
-ui.teamSelectGrid.addEventListener("pointerdown", (event) => {
-  const card = event.target.closest("[data-ball-id][data-action='add']");
-  if (!card) {
+ui.teamModal.addEventListener("pointerdown", (event) => {
+  const target = event.target.closest("button, [data-ball-id][data-action]");
+  if (!target || state.phase !== "draft") {
     return;
   }
 
   event.preventDefault();
-  addBallToLineup(state, card.dataset.ballId);
-  updateUI(state, ui);
-  renderTeamDraft(state, ui);
-});
+  event.stopPropagation();
 
-ui.teamSummaryChips.addEventListener("pointerdown", (event) => {
-  const chip = event.target.closest("[data-ball-id][data-action='remove']");
-  if (!chip) {
-    return;
-  }
-
-  event.preventDefault();
-  removeBallFromLineup(state, chip.dataset.ballId);
-  updateUI(state, ui);
-  renderTeamDraft(state, ui);
-});
-
-ui.teamResetButton.addEventListener("pointerdown", (event) => {
-  event.preventDefault();
-  resetLineupDraft(state);
-  updateUI(state, ui);
-  renderTeamDraft(state, ui);
-});
-
-ui.teamConfirmButton.addEventListener("pointerdown", (event) => {
-  event.preventDefault();
-  if (confirmLineupDraft(state)) {
+  if (target === ui.teamResetButton) {
+    resetLineupDraft(state);
     updateUI(state, ui);
     renderTeamDraft(state, ui);
+    return;
   }
+
+  if (target === ui.teamConfirmButton) {
+    if (confirmLineupDraft(state)) {
+      updateUI(state, ui);
+      renderTeamDraft(state, ui);
+    }
+    return;
+  }
+
+  const actionTarget = target.closest("[data-ball-id][data-action]");
+  if (!actionTarget) {
+    return;
+  }
+
+  if (actionTarget.dataset.action === "add") {
+    addBallToLineup(state, actionTarget.dataset.ballId);
+  } else if (actionTarget.dataset.action === "remove") {
+    removeBallFromLineup(state, actionTarget.dataset.ballId);
+  }
+
+  updateUI(state, ui);
+  renderTeamDraft(state, ui);
 });
 
 function tick(now) {

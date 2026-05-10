@@ -42,6 +42,9 @@ export function updateUI(state, refs) {
 export function renderTeamDraft(state, refs) {
   const isDraftPhase = state.phase === "draft";
   refs.teamModal.classList.toggle("is-hidden", !isDraftPhase);
+  refs.teamModal.hidden = !isDraftPhase;
+  refs.teamModal.inert = !isDraftPhase;
+  refs.teamModal.setAttribute("aria-hidden", String(!isDraftPhase));
   document.body.classList.toggle("modal-open", isDraftPhase);
 
   if (!isDraftPhase) {
