@@ -10,6 +10,8 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const state = createGameState();
 const ui = createUIRefs();
+const MODAL_TAP_LOCK_MS = 700;
+let modalTapLockUntil = 0;
 
 canvas.width = GAME_WIDTH;
 canvas.height = GAME_HEIGHT;
@@ -37,6 +39,14 @@ async function preloadBackgroundImage() {
 async function preloadUiImages() {
   const image = await loadImage(ASSETS.ui.slingshot);
   setSlingshotImage(image);
+}
+
+function lockModalTap() {
+  modalTapLockUntil = performance.now() + MODAL_TAP_LOCK_MS;
+}
+
+function isModalTapLocked() {
+  return performance.now() < modalTapLockUntil;
 }
 
 function syncViewportHeight() {
@@ -95,6 +105,10 @@ syncViewportHeight();
 resizeCanvasDisplay();
 
 attachInput(canvas, state, () => {
+  if (isModalTapLocked()) {
+    return;
+  }
+
   commitShot(state);
   updateUI(state, ui);
 });
@@ -104,7 +118,20 @@ window.addEventListener("resize", syncViewportHeight);
 window.visualViewport?.addEventListener("resize", syncViewportHeight);
 window.visualViewport?.addEventListener("scroll", syncViewportHeight);
 
+document.addEventListener("click", (event) => {
+  if (!isModalTapLocked()) {
+    return;
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+}, true);
+
 ui.retryButton.addEventListener("click", () => {
+  if (isModalTapLocked()) {
+    return;
+  }
+
   restartStage(state);
   syncStageGeometry();
   updateUI(state, ui);
@@ -112,6 +139,10 @@ ui.retryButton.addEventListener("click", () => {
 });
 
 ui.restartButton.addEventListener("click", () => {
+  if (isModalTapLocked()) {
+    return;
+  }
+
   restartStage(state);
   syncStageGeometry();
   updateUI(state, ui);
@@ -119,6 +150,10 @@ ui.restartButton.addEventListener("click", () => {
 });
 
 ui.nextButton.addEventListener("click", () => {
+  if (isModalTapLocked()) {
+    return;
+  }
+
   goToNextStage(state);
   syncStageGeometry();
   updateUI(state, ui);
@@ -131,6 +166,7 @@ ui.teamModal.addEventListener("pointerdown", (event) => {
     return;
   }
 
+  lockModalTap();
   event.preventDefault();
   event.stopPropagation();
 
